@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>十厘米里几针 · 照样片密度改图解的针数、行数和毛线团数</title>
+<meta name="description" content="织出来的样片和图解密度对不上时，把图解里每一片的起针、结束针、行数、加减针节奏按你的样片改过来，按花样倍数取整，算出宽高差几厘米、毛线要几团。">
+<style>
+  :root{
+    --bg:#f4f1ec; --card:#fffdfa; --ink:#2b2730; --ink2:#55505c; --mut:#8a8490; --line:#e4dde3;
+    --wool:#8c3b5a; --wool2:#f6e6ec; --old:#6f7d8c; --old2:#e9eef3; --moss:#3f6b4a; --moss2:#e4efe6;
+    --amber:#8a6512; --amber2:#fbf3dc; --rust:#a3401f; --rust2:#fbe9e2;
+    --sh:0 1px 2px rgba(43,39,48,.06),0 6px 18px rgba(43,39,48,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 16px 72px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 6px}
+  .sub{color:var(--ink2);margin:0;font-size:15.5px}
+  .muted{color:var(--mut);font-size:13.5px}
+  .hide{display:none !important}
+  button{font:inherit;cursor:pointer}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:13.5px;color:var(--ink2)}
+  .chip[aria-pressed="true"]{background:var(--wool);border-color:var(--wool);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);padding:16px;margin:14px 0;min-width:0}
+  .card h2{font-size:17px;margin:0 0 10px}
+  .card h2 small{font-weight:400;color:var(--mut);font-size:13px;margin-left:6px}
+  .f{min-width:0}
+  .f label{display:block;font-size:12.5px;color:var(--ink2);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .f input,.f select{width:100%;font:15px/1.4 ui-monospace,Menlo,monospace;padding:8px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);min-width:0}
+  .f select{font-family:inherit}
+  .f.bad input,.f.bad select{border-color:#c4502c;background:#fff6f2}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(150px,100%),1fr));gap:10px}
+  .btn{background:var(--wool);border:1px solid var(--wool);color:#fff;border-radius:9px;padding:8px 13px;font-size:14px}
+  .btn.ghost{background:#fff;color:var(--wool)}
+  .btn.mini{padding:6px 10px;font-size:13px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+
+  /* ① 两块样片并排 */
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .sw{border-radius:12px;padding:12px;min-width:0}
+  .sw.old{background:var(--old2)} .sw.new{background:var(--wool2)}
+  .sw h3{margin:0 0 8px;font-size:15px}
+  .sw .grid{grid-template-columns:repeat(auto-fill,minmax(min(130px,100%),1fr))}
+  .dens{font:700 22px/1.3 ui-monospace,Menlo,monospace;margin:8px 0 2px;overflow-wrap:anywhere}
+  .sw.old .dens{color:var(--old)} .sw.new .dens{color:var(--wool)}
+  .ruler{display:block;width:100%;height:64px;margin-top:6px}
+  .ratio{margin:10px 0 0;font-size:15px;overflow-wrap:anywhere}
+  .ratio b{font-family:ui-monospace,Menlo,monospace;color:var(--wool)}
+  @media (max-width:720px){ .duo{grid-template-columns:1fr} }
+
+  /* ② 图解改写：每片一张「旧 → 新」对照 */
+  .pieces{display:grid;gap:12px}
+  .pc{border:1px solid var(--line);border-radius:12px;background:#fff;padding:12px;min-width:0}
+  .pc.narrow{border-color:#e7b9a6} .pc.wide{border-color:#e9d59a}
+  .pchead{display:grid;grid-template-columns:minmax(0,1fr) 90px auto;gap:8px;align-items:end}
+  .pcin{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:8px}
+  .cmp{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;table-layout:fixed}
+  .cmp th,.cmp td{padding:6px 6px;border-top:1px dashed var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}
+  .cmp th{font-weight:400;color:var(--mut);width:22%}
+  .cmp td.o{color:var(--old);width:33%}
+  .cmp td.n{color:var(--wool);font-weight:700;font-family:ui-monospace,Menlo,monospace}
+  .cmp td.n.tx{font-family:inherit}
+  .cmp .arrow{color:var(--mut);width:6%;text-align:center}
+  .flag{display:inline-block;font-size:12.5px;border-radius:999px;padding:1px 9px;margin-left:6px;font-weight:600}
+  .flag.ok{background:var(--moss2);color:var(--moss)} .flag.narrow{background:var(--rust2);color:var(--rust)} .flag.wide{background:var(--amber2);color:var(--amber)}
+  .rowmsg{font-size:12.5px;color:var(--rust);margin-top:6px;overflow-wrap:anywhere}
+  .rowmsg:empty{display:none}
+  .rounds{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:13px;color:var(--ink2);align-items:center}
+  .rounds button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:13px;color:var(--ink2)}
+  .rounds button[aria-pressed="true"]{background:var(--old);border-color:var(--old);color:#fff}
+  @media (max-width:720px){
+    .pcin{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .cmp th{width:26%} .cmp td.o{width:28%}
+  }
+
+  /* 结论条 */
+  .head{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:12px}
+  .stat{background:var(--wool2);border-radius:12px;padding:12px 14px;min-width:0}
+  .stat b{display:block;font:800 28px/1.2 ui-monospace,Menlo,monospace;color:var(--wool);overflow-wrap:anywhere}
+  .stat span{font-size:13.5px;color:var(--ink2)}
+  .stat.yarn{background:var(--moss2)} .stat.yarn b{color:var(--moss)}
+  .lead{margin:10px 0 0;font-size:15.5px;overflow-wrap:anywhere}
+
+  .yarnTbl{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:10px}
+  .yarnTbl td,.yarnTbl th{padding:7px 6px;border-top:1px dashed var(--line);text-align:left;overflow-wrap:anywhere}
+  .yarnTbl tr.use td{font-weight:700;color:var(--moss)}
+  .box{border-radius:10px;padding:10px 12px;font-size:14.5px;margin:10px 0;overflow-wrap:anywhere}
+  .box.bad{background:var(--rust2);color:#7a2f12;border:1px solid #f0cdbb}
+  .box.warn{background:var(--amber2);color:#6a4c0c;border:1px solid #efdfb2}
+  .box ul{margin:4px 0 0;padding-left:20px}
+  .acts{display:grid;gap:8px}
+  .act{text-align:left;background:var(--moss2);border:1px solid #c4dbc9;color:#2c4a33;border-radius:10px;padding:9px 12px;font-size:14px;overflow-wrap:anywhere}
+  .act:hover{border-color:var(--moss)}
+  .foot{margin-top:18px;font-size:13.5px;color:var(--mut)}
+  .foot li{margin:3px 0}
+  #saveTag{font-size:12.5px;color:var(--mut);font-weight:400}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>十厘米里几针</h1>
+    <p class="sub">样片织出来和图解的密度对不上？把两块「10 厘米」填进来，图解里每一片的起针、加减针、行数就按你的手劲改好，顺便算毛线要几团。</p>
+    <div class="chips" id="presets"></div>
+    <p class="muted" id="presetNote"></p>
+  </header>
+
+  <section class="card" id="summary">
+    <h2>结果 <span id="saveTag"></span></h2>
+    <div id="errBox" class="box bad hide"></div>
+    <div id="okHead">
+      <div class="head">
+        <div class="stat"><b id="sRatio"></b><span id="sRatioTx"></span></div>
+        <div class="stat"><b id="sDev"></b><span id="sDevTx"></span></div>
+        <div class="stat yarn"><b id="sBuy"></b><span id="sBuyTx"></span></div>
+      </div>
+      <p class="lead" id="lead"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>① 两块 10 厘米 <small>样片洗过、晾平再量；宽高最好量 10 cm 以上</small></h2>
+    <div class="duo">
+      <div class="sw old">
+        <h3>图解上写的</h3>
+        <div class="grid">
+          <div class="f" id="f_ps"><label for="ps">10 cm 多少针</label><input id="ps" inputmode="decimal"></div>
+          <div class="f" id="f_pr"><label for="pr">10 cm 多少行</label><input id="pr" inputmode="decimal"></div>
+        </div>
+        <div class="dens" id="dOld"></div>
+        <svg class="ruler" id="rOld" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+      <div class="sw new">
+        <h3>我的样片</h3>
+        <div class="grid">
+          <div class="f" id="f_swS"><label for="swS">数了几针</label><input id="swS" inputmode="numeric"></div>
+          <div class="f" id="f_swW"><label for="swW">量得宽（cm）</label><input id="swW" inputmode="decimal"></div>
+          <div class="f" id="f_swR"><label for="swR">数了几行</label><input id="swR" inputmode="numeric"></div>
+          <div class="f" id="f_swH"><label for="swH">量得高（cm）</label><input id="swH" inputmode="decimal"></div>
+        </div>
+        <div class="dens" id="dNew"></div>
+        <svg class="ruler" id="rNew" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+    </div>
+    <p class="ratio" id="ratio"></p>
+    <div class="grid" style="margin-top:10px">
+      <div class="f" id="f_tol"><label for="tol">宽差多少算对不上（cm）</label><input id="tol" inputmode="decimal"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>② 图解逐片改 <small>左边原图解，右边改好的；花样倍数 = 一组花样几针</small></h2>
+    <div class="pieces" id="pieces"></div>
+    <div class="bar"><button type="button" class="btn ghost mini" id="addPc">+ 再加一片</button></div>
+  </section>
+
+  <section class="card" id="yarnCard">
+    <h2>③ 毛线要几团 <small>两种算法，至少填一种的数据</small></h2>
+    <div class="grid">
+      <div class="f" id="f_wg"><label for="wg">整块样片重（g，可空）</label><input id="wg" inputmode="decimal"></div>
+      <div class="f" id="f_ww"><label for="ww">整块样片宽 cm</label><input id="ww" inputmode="decimal"></div>
+      <div class="f" id="f_wh"><label for="wh">整块样片高 cm</label><input id="wh" inputmode="decimal"></div>
+      <div class="f" id="f_pBalls"><label for="pBalls">原图解用几团（可空）</label><input id="pBalls" inputmode="decimal"></div>
+      <div class="f" id="f_pM"><label for="pM">原图解每团几米</label><input id="pM" inputmode="decimal"></div>
+      <div class="f" id="f_yM"><label for="yM">我的线每团几米</label><input id="yM" inputmode="decimal"></div>
+      <div class="f" id="f_yG"><label for="yG">我的线每团几克</label><input id="yG" inputmode="decimal"></div>
+      <div class="f" id="f_yPrice"><label for="yPrice">每团价格（元）</label><input id="yPrice" inputmode="decimal"></div>
+      <div class="f" id="f_yHave"><label for="yHave">手里已有几团</label><input id="yHave" inputmode="numeric"></div>
+      <div class="f" id="f_spare"><label for="spare">多备（%）</label><input id="spare" inputmode="decimal"></div>
+      <div class="f" id="f_method"><label for="method">按哪种算（自动 = 有称重用称重）</label><select id="method">
+        <option value="auto">自动</option><option value="weight">按样片称重</option><option value="meter">按原图解米数</option><option value="max">两者取多</option>
+      </select></div>
+    </div>
+    <div id="yarnOut"></div>
+    <div id="warnBox" class="box warn hide"></div>
+    <div id="actsBlock"><h2 style="margin-top:14px;font-size:15px">点一下就改到上面的输入</h2><div class="acts" id="acts"></div></div>
+  </section>
+
+  <section class="card">
+    <div class="bar" style="margin:0">
+      <button type="button" class="btn mini" id="dlCsv">下载 CSV</button>
+      <button type="button" class="btn mini" id="dlMd">下载 MD</button>
+      <button type="button" class="btn mini" id="dlPng">下载改写单 PNG</button>
+      <button type="button" class="btn mini ghost" id="dlJson">备份 JSON</button>
+      <button type="button" class="btn mini ghost" id="impJson">从 JSON 恢复</button>
+      <button type="button" class="btn mini ghost" id="reset">恢复默认</button>
+      <input type="file" id="impFile" accept="application/json,.json" class="hide">
+    </div>
+    <ul class="foot">
+      <li>默认图解、样片、毛线规格与价格都是虚构示例。</li>
+      <li>按样片密度等比换算；加减针在新行数里尽量均分，不区分正面行、反面行，织之前按自己的图解习惯再排。</li>
+      <li>米数法假设每平方厘米用线一样长，密度差得越多越不准；称一下样片更准。本页不判断针号和手感。</li>
+      <li>输入只存在这台设备的浏览器里（localStorage），不上传。</li>
+    </ul>
+  </section>
+</div>
+<script src="./core.js"></script>
+<script src="./ui.js"></script>
+</body>
+</html>
